@@ -21,6 +21,8 @@ public class Game : MonoBehaviour
 
     float spawnProgress;
 
+    EnemyCollection enemies = new EnemyCollection();
+
     Ray TouchRay => Camera.main.ScreenPointToRay(Input.mousePosition);
 
     void Awake(){
@@ -50,6 +52,7 @@ public class Game : MonoBehaviour
             spawnProgress -= 1f;
             SpawnEnemy();
         }
+        enemies.GameUpdate();
     }
 
     void OnValidate(){
@@ -83,5 +86,6 @@ public class Game : MonoBehaviour
         GameTile spawnPoint = board.GetSpawnPoint(Random.Range(0, board.SpawnPointCount));
         Enemy enemy = enemyFactory.Get();
         enemy.SpawnOn(spawnPoint);
+        enemies.Add(enemy);
     }
 }
