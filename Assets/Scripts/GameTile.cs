@@ -12,6 +12,9 @@ public class GameTile : MonoBehaviour
     GameTileContent content;
     int distance;
 
+    public GameTile NextOnPath => nextOnPath;
+    public Vector3 ExitPoint {get; private set;}
+
     static Quaternion
         northRotation = Quaternion.Euler(90f, 0f, 0f),
         eastRotation = Quaternion.Euler(90f, 90f, 0f),
@@ -26,6 +29,7 @@ public class GameTile : MonoBehaviour
     public void BecomeDestination(){
         distance = 0;
         nextOnPath = null;
+        ExitPoint = transform.localPosition;
     }
 
     public bool HasPath => distance != int.MaxValue;
@@ -37,6 +41,7 @@ public class GameTile : MonoBehaviour
         }
         neighbor.distance = distance + 1;
         neighbor.nextOnPath = this;
+        neighbor.ExitPoint = (neighbor.transform.localPosition + transform.localPosition) * 0.5f;
         return 
             neighbor.Content.Type != GameTileContentType.Wall ? neighbor: null;
     }
