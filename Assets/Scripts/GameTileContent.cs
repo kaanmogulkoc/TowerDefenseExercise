@@ -18,6 +18,8 @@ public class GameTileContent : MonoBehaviour
         }
     }
 
+    public bool BlocksPath => Type = GameTileContentType.Wall || GameTileContentType.Tower;
+
     public void Recycle(){
         originFactory.Reclaim(this);
     }
