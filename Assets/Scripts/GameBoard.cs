@@ -16,10 +16,16 @@ public class GameBoard : MonoBehaviour
     Vector2Int size;
     GameTile[] tiles;
     Queue<GameTile> searchFrontier = new Queue<GameTile>();
+    List<GameTileContent> updatingContent = new List<GameTileContent>();
     GameTileContentFactory contentFactory;
     bool showPaths, showGrid;
     List<GameTile> spawnPoints = new List<GameTile>();
 
+    public override void GameUpdate(){
+        for(int i = 0; i < updatingContent.Count; i++){
+            updatingContent[i].GameUpdate();
+        }
+    }
     bool FindPaths(){
         foreach(GameTile tile in tiles){
             if(!tile.HasPath){
@@ -98,7 +104,7 @@ public class GameBoard : MonoBehaviour
     }
 
     public GameTile GetTile(Ray ray){
-        if(Physics.Raycast(ray, out RaycastHit hit)){
+        if(Physics.Raycast(ray, out RaycastHit hit, float.MaxValue, 1)){
             int x = (int)(hit.point.x + size.x * 0.5f);
             int y = (int)(hit.point.z + size.y * 0.5f);
             if(x >= 0 && x < size.x && y >= 0 && y < size.y){
@@ -145,6 +151,9 @@ public class GameBoard : MonoBehaviour
         else if(tile.Content.Type == GameTileContentType.Empty){
             tile.Content = contentFactory.Get(GameTileContentType.Tower);
             if(!FindPaths()){
+                updatingContent.Add(tile.Content);
+            }
+            else{
                 tile.Content = contentFactory.Get(GameTileContentType.Empty);
                 FindPaths();
             }

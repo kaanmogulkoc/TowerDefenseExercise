@@ -8,6 +8,8 @@ public class GameTileContent : MonoBehaviour
     GameTileContentType type = default;
     GameTileContentFactory originFactory;
 
+    public virtual void GameUpdate(){}
+
     public GameTileContentType Type => type;
 
     public GameTileContentFactory OriginFactory{
@@ -18,7 +20,7 @@ public class GameTileContent : MonoBehaviour
         }
     }
 
-    public bool BlocksPath => Type = GameTileContentType.Wall || GameTileContentType.Tower;
+    public bool BlocksPath => Type == GameTileContentType.Wall || Type == GameTileContentType.Tower;
 
     public void Recycle(){
         originFactory.Reclaim(this);
